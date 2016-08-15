@@ -33,35 +33,35 @@ After you complete this procedure, follow the instructions in the [Deploying Ela
 
 #### Configure your Identity Provider ####
 
-1. Log in to your identity provider. In this example, we are using Okta as our identity provider.
+##### Get IDP Metadata #####
 
-1. Once you have logged in, click **Add Application**.  
-    <%= image_tag("add_app.png") %>
+1. Log in to your IDP console and download the IDP metadata XML. Optionally if the IDP supports metadata URL, you can copy the metadata URL instead of the XML
+2. Copy the IDP metadata XML or URL into OpsManager 
+Abby Add new screenshots
 
-1. Select the SAML 2.0 radio button and click **Create**.
-    <%= image_tag("select_saml.png") %>
+Note: The same IDP metadata URL/XML is applied for the Bosh Director. If you want to use a seperate IDP for Bosh, you will need to copy the metadata XML/URL from that IDP and enter it into the Bosh IDP Metadata text box in the OpsManager UI
 
-1. In **Edit SAML Integration** >> **General Settings**, create an Ops Manager application. In **App name**, enter Ops Manager. If necessary, configure the **App logo** and visibility. 
-    <%= image_tag("create_app.png") %> 
+3. Download SAML Service Provider a.k.a SAML Relying Party metadata
+Note: This step should be performed after  you have applied the IDP metadata to Ops Manager from Step 2 above
+a. Download the OpsManager SAML service provider metadata from https://{OPS-MAN-FQDN}:443/uaa/saml/metadata
 
-1. In **Edit SAML Integration** >> **Configure SAML**, enter values in the following fields:
-    * **Single sign on URL**: `https://{OPS-MAN-FQDN}:443/uaa/saml/SSO/alias/{OPS-MAN-FQDN}` 
-    * **Audience URI (SP Entity ID)**: `https://{OPS-MAN-FQDN}:443/uaa/saml/SSO/alias/{OPS-MAN-FQDN}`
+Note: This step should be performed after the Bosh Director has been deployed
+b. Download the Bosh Director SAML service provider metadata from https://{BOSH-IP}:443/uaa/saml/metadata
 
-    <%= image_tag("edit_saml.png") %> 
+4. Configure Identity Provider with SAML Service Provider Metadata 
+a. Import the OpsManager SAML provider metadata from Step 3a into the Identity Provider
+Optionally if the Identity Provider does not support import, then provide the values below:
+Single sign on URL: https://{OPS-MAN-FQDN}:443/uaa/saml/SSO/alias/{OPS-MAN-FQDN}
+Audience URI (SP Entity ID): https://{OPS-MAN-FQDN}:443/uaa/saml/SSO/alias/{OPS-MAN-FQDN}
+Name ID is Email Address
+SAML authentication requests are always signed 
 
-1. Open the newly created Ops Manager application.
-
-1. Under the **Sign On** nav, copy the **Identity Provider meta**. 
-
-    <%= image_tag("copy_meta.png") %> 
-
-1. (Optional) If you are using BOSH IDP Metadata, follow the same steps above and enter values specific for BOSH:
-    * **App Name**: Enter BOSH. 
-    * **Single sign on URL**: `https://{BOSH-IP}:443/uaa/saml/SSO/alias/{OP-MAN-FQDN}`
-    * **Audience URI (SP Entity ID)**: `https://{OP-MAN-FQDN}:443/uaa`
-
-1. Return to the Ops Manager **Use an Identity Provider** log in page. 
+b. Import the Bosh Director SAML provider metadata from Step 3b into the Identity Provider 
+Optionally if the Identity Provider does not support import, then provide the values below:
+Single sign on URL: https://{BOSH-IP}:443/uaa/saml/SSO/alias/{OP-MAN-FQDN}
+Audience URI (SP Entity ID): https://{OP-MAN-FQDN}:443/uaa
+Name ID is Email Address 
+SAML authentication requests are always signed 
 
 #### Log in to Ops Manager using your IDP Metadata ####
 
